@@ -70,8 +70,9 @@ theme: hexo-theme-yilia
 # Deployment
 ## Docs: http://hexo.io/docs/deployment.html
 deploy:
-  type:
-
+  type: git
+  repository: git@github.com:chocotan/chocotan.github.io.git
+  branch: master
 
 feed:
   type: atom
