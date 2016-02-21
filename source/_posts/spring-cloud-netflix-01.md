@@ -183,13 +183,15 @@ SpringApplication.run(TestEurekaClientApplication.class, args);
     <artifactId>spring-cloud-starter-ribbon</artifactId>
 </dependency>
 ```
-Ribbon实际上和Eureka并没有啥关系啦，Ribbon是个类似于负载均衡的东西，只需要引入Ribbon的依赖，然后Ribbon就会自己创建个RestTemplate的实例了，这个RestTemplate还比较高端，和普通的不一样
+Ribbon是个类似于负载均衡的东西，只需要引入Ribbon的依赖，然后Ribbon就会自己创建个RestTemplate的实例了，这个RestTemplate还比较高端，和普通的不一样
 
 比如配置文件里这样写
 ```sql
-test-service:
-  ribbon:
-    listOfServers: localhost:10002
+## ribbon直接映射注册到eureka的服务
+ribbon:
+  eureka:
+    enabled: true
+
 ```
 然后代码里这样写
 ```java
@@ -199,8 +201,7 @@ restTemplate.getForEntity("http://test-service/hello", String.class).getBody();
 
 以下是稍微完整的栗子
 
-```
-
+```java
 @SpringBootApplication
 @EnableEurekaClient
 @RestController
@@ -285,7 +286,7 @@ public String remoteHello() {
 
 这里直接注入上面Feign的的RemoteHelloService，设置了500毫秒的超时时间，当超时的时候就fallback，去执行timeout方法
 
-```
+```java
 @RestController
 class RemoteHelloController {
 
