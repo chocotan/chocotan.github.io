@@ -6,18 +6,20 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://blog.loli.io">
-  <title>Archives: 2016 | 天羽ちよこ的新个人站点</title>
+  <title>RxJava使用线程池 | 天羽ちよこ的新个人站点</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="喵！">
-<meta property="og:type" content="website">
-<meta property="og:title" content="天羽ちよこ的新个人站点">
-<meta property="og:url" content="http://blog.loli.io/archives/2016/index.html">
+  <meta name="description" content="最近在瞎折腾rxjava，写了一段自认为能并发执行的代码如下： 12345678910// 大小为5的线程池ThreadPoolExecutor exec = new ThreadPoolExecutor(    5, 5, 200, TimeUnit.SECONDS, new LinkedBlockingQueue&amp;lt;&amp;gt;());Flowable.just(1, 2, 3, 4, 5)">
+<meta name="keywords" content="java,rxjava">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RxJava使用线程池">
+<meta property="og:url" content="http://blog.loli.io/2018/03/11/rxjava-parallel/index.html">
 <meta property="og:site_name" content="天羽ちよこ的新个人站点">
-<meta property="og:description" content="喵！">
+<meta property="og:description" content="最近在瞎折腾rxjava，写了一段自认为能并发执行的代码如下： 12345678910// 大小为5的线程池ThreadPoolExecutor exec = new ThreadPoolExecutor(    5, 5, 200, TimeUnit.SECONDS, new LinkedBlockingQueue&amp;lt;&amp;gt;());Flowable.just(1, 2, 3, 4, 5)">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:updated_time" content="2018-03-11T05:47:07.295Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="天羽ちよこ的新个人站点">
-<meta name="twitter:description" content="喵！">
+<meta name="twitter:title" content="RxJava使用线程池">
+<meta name="twitter:description" content="最近在瞎折腾rxjava，写了一段自认为能并发执行的代码如下： 12345678910// 大小为5的线程池ThreadPoolExecutor exec = new ThreadPoolExecutor(    5, 5, 200, TimeUnit.SECONDS, new LinkedBlockingQueue&amp;lt;&amp;gt;());Flowable.just(1, 2, 3, 4, 5)">
   
     <link rel="alternative" href="/atom.xml" title="天羽ちよこ的新个人站点" type="application/atom+xml">
   
@@ -157,220 +159,205 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-rxjava-parallel" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      RxJava使用线程池
+    </h1>
+  
+
+        
+        <a href="/2018/03/11/rxjava-parallel/" class="archive-article-date">
+  	<time datetime="2018-03-11T05:19:47.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-03-11</time>
+</a>
+        
+      </header>
     
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>最近在瞎折腾rxjava，写了一段自认为能并发执行的代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 大小为5的线程池</span></span><br><span class="line">ThreadPoolExecutor exec = <span class="keyword">new</span> ThreadPoolExecutor(</span><br><span class="line">    <span class="number">5</span>, <span class="number">5</span>, <span class="number">200</span>, TimeUnit.SECONDS, <span class="keyword">new</span> LinkedBlockingQueue&lt;&gt;());</span><br><span class="line"></span><br><span class="line">Flowable.just(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>)</span><br><span class="line">        .subscribeOn(Schedulers.from(exec))</span><br><span class="line">        .subscribe(i -&gt; &#123;</span><br><span class="line">            Thread.sleep(<span class="number">1000L</span>);</span><br><span class="line">            System.out.println(i + <span class="string">"\t"</span> + Thread.currentThread().getName());</span><br><span class="line">        &#125;);</span><br></pre></td></tr></table></figure>
+<p>由于我在subscribe中sleep了1s，所以我认为这五个数字会并发的执行到subscribe中去，期待会有如下的输出</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">1	pool-1-thread-1</span><br><span class="line">2	pool-1-thread-2</span><br><span class="line">3	pool-1-thread-3</span><br><span class="line">4	pool-1-thread-4</span><br><span class="line">5	pool-1-thread-5</span><br></pre></td></tr></table></figure>
+<p>然而事与愿违，实际的输出是这样的<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">1	pool-1-thread-1</span><br><span class="line">2	pool-1-thread-1</span><br><span class="line">3	pool-1-thread-1</span><br><span class="line">4	pool-1-thread-1</span><br><span class="line">5	pool-1-thread-1</span><br></pre></td></tr></table></figure></p>
+<p>嗯嗯？为什么没有并发执行subscribe里的代码呢？我以为是我自己的代码有问题，又陆续尝试了内置的一些Scheduler，consumer均是在同一个线程中执行的，好吧，看来是我理解错rxjava的Schedulers了，这货的from方法接收一个Executor参数，并不是指接下来的任务会提交给这个线程池并发的执行。</p>
+<p>这大概也是RxJava和CompletableFuture的区别之一吧。搜索了一圈，用rxjava实现并发主要以以下几个方法</p>
+<ol>
+<li><p>在flatMap中使用obseveOn</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Flowable.just(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>)</span><br><span class="line">        .flatMap(i -&gt; Flowable.just(i).observeOn(Schedulers.from(exec))</span><br><span class="line">                .doOnNext(d -&gt; &#123;</span><br><span class="line">                    System.out.println(d + <span class="string">"\t"</span> + Thread.currentThread().getName());</span><br><span class="line">                    Thread.sleep(<span class="number">1000L</span>);</span><br><span class="line">                &#125;))</span><br><span class="line">        .subscribe();</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在flatMap中使用Future</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Flowable.just(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>)</span><br><span class="line">        .flatMap(i -&gt; Flowable.fromFuture(CompletableFuture.completedFuture(i), Schedulers.from(exec))</span><br><span class="line">                .doOnNext(d -&gt; &#123;</span><br><span class="line">                    System.out.println(d + <span class="string">"\t"</span> + Thread.currentThread().getName());</span><br><span class="line">                    Thread.sleep(<span class="number">1000L</span>);</span><br><span class="line">                &#125;)</span><br><span class="line">        )</span><br><span class="line">        .subscribe();</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用ParallelFlowable</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Flowable.just(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>)</span><br><span class="line">        .parallel()</span><br><span class="line">        .runOn(Schedulers.from(exec))</span><br><span class="line">        .doOnNext(d -&gt; &#123;</span><br><span class="line">            System.out.println(d + <span class="string">"\t"</span> + Thread.currentThread().getName());</span><br><span class="line">            Thread.sleep(<span class="number">1000L</span>);</span><br><span class="line">        &#125;)</span><br><span class="line">        .sequential()</span><br><span class="line">        .subscribe();</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>有两个要注意的地方</p>
+<ol>
+<li>RxJava在执行并发的时候，并不会使用Executor的maximumPollSize这个属性，corePollSize有多大，那么最大就有多少个线程</li>
+<li>parallel()有一个重载方法可以传入并发数，默认为cpu核心数，在单核的服务器上这个数字是1，也就是不管Executor有多少个线程，只会用一个线程去执行任务</li>
+</ol>
+
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
+      
+    </div>
+    <div class="article-info article-info-index">
       
       
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2016" class="archive-year">2016</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2016/11/23/spring-boot-autoconfig-dev-01/" class="archive-article-date">
-  	<time datetime="2016-11-23T13:51:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-11-23</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2016/11/23/spring-boot-autoconfig-dev-01/">spring boot中@EnableXXX注解的做法</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2016/02/25/2015-to-2016/" class="archive-article-date">
-  	<time datetime="2016-02-25T13:46:27.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-02-25</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2016/02/25/2015-to-2016/">从2015到2016</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">日常</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">java,rxjava</a>
         		</li>
       		
 		</ul>
 	</div>
 
-          
+      
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://blog.loli.io/2018/03/11/rxjava-parallel/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2016/02/21/spring-cloud-netflix-01/" class="archive-article-date">
-  	<time datetime="2016-02-21T15:04:08.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-02-21</time>
-</a>
+<nav id="article-nav">
+  
+  
+    <a href="/2016/11/23/spring-boot-autoconfig-dev-01/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">spring boot中@EnableXXX注解的做法</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2016/02/21/spring-cloud-netflix-01/">Spring Cloud学习笔记——Netflix的那些东西</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">spring</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">java</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/java//" class="article-tag-list-link color5">java</a>
-        		</li>
-      		
-		</ul>
-	</div>
+        
+        
+    </div>
+</aside>
 
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2016/01/29/spring-cloud-01/" class="archive-article-date">
-  	<time datetime="2016-01-28T16:56:13.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-01-29</time>
-</a>
-        </div>
-    	 
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2016/01/29/spring-cloud-01/">Spring Cloud学习笔记——Spring Cloud Config的使用(1)</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">spring</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">java</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/java//" class="article-tag-list-link color5">java</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2016/01/28/换成Hexo了！/" class="archive-article-date">
-  	<time datetime="2016-01-28T13:36:27.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-01-28</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2016/01/28/换成Hexo了！/">换成Hexo了！</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
   
 
-    
+  
+  <div id="gitment-ctn"></div> 
+<link rel="stylesheet" href="//imsun.github.io/gitment/style/default.css">
+<script src="//imsun.github.io/gitment/dist/gitment.browser.js"></script>
+<script>
+var gitment = new Gitment({
+  id: "http://blog.loli.io/2018/03/11/rxjava-parallel/",
+  owner: 'chocotan',
+  repo: 'chocotan.github.io',
+  oauth: {
+    client_id: '957284a372440bcf40f7',
+    client_secret: '23e1eda7961136ed50b511624ab7f448fe635e7d',
+  },
+})
+gitment.render('gitment-ctn')
+</script>
+  
 
 
           </div>
@@ -393,8 +380,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
