@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://blog.loli.io/"/>
-  <updated>2018-03-11T05:47:07.295Z</updated>
+  <updated>2018-03-11T05:58:24.857Z</updated>
   <id>http://blog.loli.io/</id>
   
   <author>
@@ -21,7 +21,7 @@
     <link href="http://blog.loli.io/2018/03/11/rxjava-parallel/"/>
     <id>http://blog.loli.io/2018/03/11/rxjava-parallel/</id>
     <published>2018-03-11T05:19:47.000Z</published>
-    <updated>2018-03-11T05:47:07.295Z</updated>
+    <updated>2018-03-11T05:58:24.857Z</updated>
     
     <content type="html"><![CDATA[<p>最近在瞎折腾rxjava，写了一段自认为能并发执行的代码如下：</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 大小为5的线程池</span></span><br><span class="line">ThreadPoolExecutor exec = <span class="keyword">new</span> ThreadPoolExecutor(</span><br><span class="line">    <span class="number">5</span>, <span class="number">5</span>, <span class="number">200</span>, TimeUnit.SECONDS, <span class="keyword">new</span> LinkedBlockingQueue&lt;&gt;());</span><br><span class="line"></span><br><span class="line">Flowable.just(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>)</span><br><span class="line">        .subscribeOn(Schedulers.from(exec))</span><br><span class="line">        .subscribe(i -&gt; &#123;</span><br><span class="line">            Thread.sleep(<span class="number">1000L</span>);</span><br><span class="line">            System.out.println(i + <span class="string">"\t"</span> + Thread.currentThread().getName());</span><br><span class="line">        &#125;);</span><br></pre></td></tr></table></figure><p>由于我在subscribe中sleep了1s，所以我认为这五个数字会并发的执行到subscribe中去，期待会有如下的输出</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">1pool-1-thread-1</span><br><span class="line">2pool-1-thread-2</span><br><span class="line">3pool-1-thread-3</span><br><span class="line">4pool-1-thread-4</span><br><span class="line">5pool-1-thread-5</span><br></pre></td></tr></table></figure><p>然而事与愿违，实际的输出是这样的<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">1pool-1-thread-1</span><br><span class="line">2pool-1-thread-1</span><br><span class="line">3pool-1-thread-1</span><br><span class="line">4pool-1-thread-1</span><br><span class="line">5pool-1-thread-1</span><br></pre></td></tr></table></figure></p><p>嗯嗯？为什么没有并发执行subscribe里的代码呢？我以为是我自己的代码有问题，又陆续尝试了内置的一些Scheduler，consumer均是在同一个线程中执行的，好吧，看来是我理解错rxjava的Schedulers了，这货的from方法接收一个Executor参数，并不是指接下来的任务会提交给这个线程池并发的执行。</p><p>这大概也是RxJava和CompletableFuture的区别之一吧。搜索了一圈，用rxjava实现并发主要以以下几个方法</p><ol><li><p>在flatMap中使用obseveOn</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Flowable.just(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>)</span><br><span class="line">        .flatMap(i -&gt; Flowable.just(i).observeOn(Schedulers.from(exec))</span><br><span class="line">                .doOnNext(d -&gt; &#123;</span><br><span class="line">                    System.out.println(d + <span class="string">"\t"</span> + Thread.currentThread().getName());</span><br><span class="line">                    Thread.sleep(<span class="number">1000L</span>);</span><br><span class="line">                &#125;))</span><br><span class="line">        .subscribe();</span><br></pre></td></tr></table></figure></li><li><p>在flatMap中使用Future</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Flowable.just(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>)</span><br><span class="line">        .flatMap(i -&gt; Flowable.fromFuture(CompletableFuture.completedFuture(i), Schedulers.from(exec))</span><br><span class="line">                .doOnNext(d -&gt; &#123;</span><br><span class="line">                    System.out.println(d + <span class="string">"\t"</span> + Thread.currentThread().getName());</span><br><span class="line">                    Thread.sleep(<span class="number">1000L</span>);</span><br><span class="line">                &#125;)</span><br><span class="line">        )</span><br><span class="line">        .subscribe();</span><br></pre></td></tr></table></figure></li><li><p>使用ParallelFlowable</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Flowable.just(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>)</span><br><span class="line">        .parallel()</span><br><span class="line">        .runOn(Schedulers.from(exec))</span><br><span class="line">        .doOnNext(d -&gt; &#123;</span><br><span class="line">            System.out.println(d + <span class="string">"\t"</span> + Thread.currentThread().getName());</span><br><span class="line">            Thread.sleep(<span class="number">1000L</span>);</span><br><span class="line">        &#125;)</span><br><span class="line">        .sequential()</span><br><span class="line">        .subscribe();</span><br></pre></td></tr></table></figure></li></ol><p>有两个要注意的地方</p><ol><li>RxJava在执行并发的时候，并不会使用Executor的maximumPollSize这个属性，corePollSize有多大，那么最大就有多少个线程</li><li>parallel()有一个重载方法可以传入并发数，默认为cpu核心数，在单核的服务器上这个数字是1，也就是不管Executor有多少个线程，只会用一个线程去执行任务</li></ol>]]></content>
     
@@ -36,7 +36,9 @@
     </summary>
     
     
-      <category term="java,rxjava" scheme="http://blog.loli.io/tags/java-rxjava/"/>
+      <category term="java" scheme="http://blog.loli.io/tags/java/"/>
+    
+      <category term="rxjava" scheme="http://blog.loli.io/tags/rxjava/"/>
     
   </entry>
   
@@ -101,9 +103,9 @@
       <category term="java" scheme="http://blog.loli.io/categories/java/"/>
     
     
-      <category term="spring" scheme="http://blog.loli.io/tags/spring/"/>
-    
       <category term="java" scheme="http://blog.loli.io/tags/java/"/>
+    
+      <category term="spring" scheme="http://blog.loli.io/tags/spring/"/>
     
   </entry>
   
@@ -126,9 +128,9 @@
       <category term="java" scheme="http://blog.loli.io/categories/java/"/>
     
     
-      <category term="spring" scheme="http://blog.loli.io/tags/spring/"/>
-    
       <category term="java" scheme="http://blog.loli.io/tags/java/"/>
+    
+      <category term="spring" scheme="http://blog.loli.io/tags/spring/"/>
     
   </entry>
   

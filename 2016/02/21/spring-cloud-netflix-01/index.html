@@ -9,7 +9,7 @@
   <title>Spring Cloud学习笔记——Netflix的那些东西 | 天羽ちよこ的新个人站点</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="最近微服务好像很火的样子，我司是用阿里的dubbo来搭建微服务的，最初感觉好牛叉的样子，但入职一年接触到现在的感觉是 阿里的东西bug太多了，比如我之前给fastjson提交了个非常猎奇的bug（到现在都没有回复，对阿里的好感度已经降到底了） Netflix的这些东西也是搞微服务用的，大约有这些东西Zuul、Eureka、Ribbon、Hystrix、Feign，花了一个下午整了个简单的demo。">
-<meta name="keywords" content="spring,java">
+<meta name="keywords" content="java,spring">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Spring Cloud学习笔记——Netflix的那些东西">
 <meta property="og:url" content="http://blog.loli.io/2016/02/21/spring-cloud-netflix-01/index.html">
@@ -80,10 +80,6 @@
             
     			
     			<a q-on="click: openSlider(e, 'friends')" href="javascript:void(0)">友链</a>
-    			
-            
-    			
-    			<a q-on="click: openSlider(e, 'aboutme')" href="javascript:void(0)">关于我</a>
     			
             
 		</nav>
@@ -265,11 +261,11 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">spring</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">java</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">java</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">spring</a>
         		</li>
       		
 		</ul>
@@ -464,25 +460,17 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
       
       
     
-      
-      
-      
-    
     
 
     <ul style="width: 70%">
     
     
       
-      <li style="width: 33.333333333333336%" q-on="click: openSlider(e, 'innerArchive')"><a href="javascript:void(0)" q-class="active:innerArchive">所有文章</a></li>
+      <li style="width: 50%" q-on="click: openSlider(e, 'innerArchive')"><a href="javascript:void(0)" q-class="active:innerArchive">所有文章</a></li>
       
         
       
-      <li style="width: 33.333333333333336%" q-on="click: openSlider(e, 'friends')"><a href="javascript:void(0)" q-class="active:friends">友链</a></li>
-      
-        
-      
-      <li style="width: 33.333333333333336%" q-on="click: openSlider(e, 'aboutme')"><a href="javascript:void(0)" q-class="active:aboutme">关于我</a></li>
+      <li style="width: 50%" q-on="click: openSlider(e, 'friends')"><a href="javascript:void(0)" q-class="active:friends">友链</a></li>
       
         
     </ul>
@@ -507,15 +495,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">spring</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">java</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">java,rxjava</a>
+                <a href="javascript:void(0)" class="js-tag color2">rxjava</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">spring</a>
               </li>
             
             <div class="clearfix"></div>
@@ -564,43 +552,9 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
     
     	<section class="tools-section tools-section-friends" q-show="friends">
   		
-        <ul class="search-ul">
-          
-            <li class="search-li">
-              <a href="http://localhost:4000/" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>友情链接1</a>
-            </li>
-          
-            <li class="search-li">
-              <a href="http://localhost:4000/" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>友情链接2</a>
-            </li>
-          
-            <li class="search-li">
-              <a href="http://localhost:4000/" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>友情链接3</a>
-            </li>
-          
-            <li class="search-li">
-              <a href="http://localhost:4000/" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>友情链接4</a>
-            </li>
-          
-            <li class="search-li">
-              <a href="http://localhost:4000/" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>友情链接5</a>
-            </li>
-          
-            <li class="search-li">
-              <a href="http://localhost:4000/" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>友情链接6</a>
-            </li>
-          
-        </ul>
-  		
     	</section>
     
 
-    
-    	<section class="tools-section tools-section-me" q-show="aboutme">
-  	  	
-  	  		<div class="aboutme-wrap" id="js-aboutme">很惭愧&lt;br&gt;&lt;br&gt;只做了一点微小的工作&lt;br&gt;谢谢大家</div>
-  	  	
-    	</section>
     
   </div>
   
