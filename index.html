@@ -198,6 +198,8 @@
 <li>RxJava在执行并发的时候，并不会使用Executor的maximumPollSize这个属性，corePollSize有多大，那么最大就有多少个线程</li>
 <li>parallel()有一个重载方法可以传入并发数，默认为cpu核心数，在单核的服务器上这个数字是1，也就是不管Executor有多少个线程，只会用一个线程去执行任务</li>
 </ol>
+<h2 id="后续"><a href="#后续" class="headerlink" title="后续"></a>后续</h2><p>最近发现在使用UnicastProcessor和ParallelFlowable的时候有cpu占用高的情况，经过跟踪发现是这样的问题：</p>
+<p>Flowable是支持背压的，所以在元素弹出过快的时候会抛出异常，而我又使用了retry，使得在抛出异常的时候会重新订阅Flowable，而UnicastProcessor只能被订阅一次，所以抛出了大量的IllegalStateException</p>
 
       
 
@@ -740,15 +742,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">日常</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">java</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">rxjava</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">日常</a>
               </li>
              
               <li class="article-tag-list-item">

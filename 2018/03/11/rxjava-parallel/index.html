@@ -16,7 +16,7 @@
 <meta property="og:site_name" content="天羽ちよこ的新个人站点">
 <meta property="og:description" content="最近在瞎折腾rxjava，写了一段自认为能并发执行的代码如下： 12345678910// 大小为5的线程池ThreadPoolExecutor exec = new ThreadPoolExecutor(    5, 5, 200, TimeUnit.SECONDS, new LinkedBlockingQueue&amp;lt;&amp;gt;());Flowable.just(1, 2, 3, 4, 5)">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:updated_time" content="2018-03-11T05:58:24.857Z">
+<meta property="og:updated_time" content="2018-03-15T00:47:10.493Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="RxJava使用线程池">
 <meta name="twitter:description" content="最近在瞎折腾rxjava，写了一段自认为能并发执行的代码如下： 12345678910// 大小为5的线程池ThreadPoolExecutor exec = new ThreadPoolExecutor(    5, 5, 200, TimeUnit.SECONDS, new LinkedBlockingQueue&amp;lt;&amp;gt;());Flowable.just(1, 2, 3, 4, 5)">
@@ -198,6 +198,8 @@
 <li>RxJava在执行并发的时候，并不会使用Executor的maximumPollSize这个属性，corePollSize有多大，那么最大就有多少个线程</li>
 <li>parallel()有一个重载方法可以传入并发数，默认为cpu核心数，在单核的服务器上这个数字是1，也就是不管Executor有多少个线程，只会用一个线程去执行任务</li>
 </ol>
+<h2 id="后续"><a href="#后续" class="headerlink" title="后续"></a>后续</h2><p>最近发现在使用UnicastProcessor和ParallelFlowable的时候有cpu占用高的情况，经过跟踪发现是这样的问题：</p>
+<p>Flowable是支持背压的，所以在元素弹出过快的时候会抛出异常，而我又使用了retry，使得在抛出异常的时候会重新订阅Flowable，而UnicastProcessor只能被订阅一次，所以抛出了大量的IllegalStateException</p>
 
       
 
@@ -442,15 +444,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">日常</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">java</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">rxjava</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">日常</a>
               </li>
              
               <li class="article-tag-list-item">
