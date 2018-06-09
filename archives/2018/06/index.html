@@ -6,20 +6,18 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://blog.loli.io">
-  <title>Spring Cloud学习笔记——Spring Cloud Config的使用(1) | 天羽ちよこ的新个人站点</title>
+  <title>Archives: 2018/6 | 天羽ちよこ的新个人站点</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="最近迷上了Spring Cloud，动态路由、负载均衡、服务发现，各种功能，觉得可以替换我司目前使用的任务调度和微服务了，我司任务调度用的是tb-schedule(基于zookeeper)，微服务是自己用dubbo实现的。 实际开发中对于任务分片用的很少，而是对于查询出数据后，如何高效地处理这些数据的问题。tb-schedule想要多线程的话，只能配置多个任务项，导致查询数据的时候必须根据任务项去">
-<meta name="keywords" content="java,spring">
-<meta property="og:type" content="article">
-<meta property="og:title" content="Spring Cloud学习笔记——Spring Cloud Config的使用(1)">
-<meta property="og:url" content="http://blog.loli.io/2016/01/29/spring-cloud-01/index.html">
+  <meta name="description" content="喵！">
+<meta property="og:type" content="website">
+<meta property="og:title" content="天羽ちよこ的新个人站点">
+<meta property="og:url" content="http://blog.loli.io/archives/2018/06/index.html">
 <meta property="og:site_name" content="天羽ちよこ的新个人站点">
-<meta property="og:description" content="最近迷上了Spring Cloud，动态路由、负载均衡、服务发现，各种功能，觉得可以替换我司目前使用的任务调度和微服务了，我司任务调度用的是tb-schedule(基于zookeeper)，微服务是自己用dubbo实现的。 实际开发中对于任务分片用的很少，而是对于查询出数据后，如何高效地处理这些数据的问题。tb-schedule想要多线程的话，只能配置多个任务项，导致查询数据的时候必须根据任务项去">
+<meta property="og:description" content="喵！">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:updated_time" content="2018-02-01T04:57:26.362Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Spring Cloud学习笔记——Spring Cloud Config的使用(1)">
-<meta name="twitter:description" content="最近迷上了Spring Cloud，动态路由、负载均衡、服务发现，各种功能，觉得可以替换我司目前使用的任务调度和微服务了，我司任务调度用的是tb-schedule(基于zookeeper)，微服务是自己用dubbo实现的。 实际开发中对于任务分片用的很少，而是对于查询出数据后，如何高效地处理这些数据的问题。tb-schedule想要多线程的话，只能配置多个任务项，导致查询数据的时候必须根据任务项去">
+<meta name="twitter:title" content="天羽ちよこ的新个人站点">
+<meta name="twitter:description" content="喵！">
   
     <link rel="alternative" href="/atom.xml" title="天羽ちよこ的新个人站点" type="application/atom+xml">
   
@@ -155,71 +153,36 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-spring-cloud-01" class="article article-type-post " itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
+            
   
-    <h1 class="article-title" itemprop="name">
-      Spring Cloud学习笔记——Spring Cloud Config的使用(1)
+  
+    
+    
+      
+      
+      <section class="archives-wrap">
+        <div class="archive-year-wrap">
+          <a href="/archives/2018" class="archive-year">2018</a>
+        </div>
+        <div class="archives">
+    
+    <article class="archive-article archive-type-post">
+  <div class="archive-article-inner">
+    <header class="archive-article-header">
+      	<div class="article-meta">
+	      	<a href="/2018/06/09/spider-01/" class="archive-article-date">
+  	<time datetime="2018-06-09T12:32:29.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-06-09</time>
+</a>
+        </div>
+    	 
+  
+    <h1 itemprop="name">
+      <a class="archive-article-title" href="/2018/06/09/spider-01/">自制的一个爬虫nekocat</a>
     </h1>
   
 
-        
-        <a href="/2016/01/29/spring-cloud-01/" class="archive-article-date">
-  	<time datetime="2016-01-28T16:56:13.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-01-29</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>最近迷上了Spring Cloud，动态路由、负载均衡、服务发现，各种功能，觉得可以替换我司目前使用的任务调度和微服务了，我司任务调度用的是tb-schedule(基于zookeeper)，微服务是自己用dubbo实现的。</p>
-<p>实际开发中对于任务分片用的很少，而是对于查询出数据后，如何高效地处理这些数据的问题。tb-schedule想要多线程的话，只能配置多个任务项，导致查询数据的时候必须根据任务项去区分开来。<br><a id="more"></a></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 线程0，查询出来处理</span></span><br><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> tab01 <span class="keyword">where</span> flag=<span class="number">0</span></span><br><span class="line"><span class="comment">-- 线程1，查询出来处理</span></span><br><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> tab01 <span class="keyword">where</span> flag=<span class="number">1</span></span><br><span class="line"><span class="comment">-- 线程2，查询出来处理</span></span><br><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> tab01 <span class="keyword">where</span> flag=<span class="number">2</span></span><br></pre></td></tr></table></figure>
-<p>而我想要的并不是查询时分多个线程，而是一起查询，多线程去处理。</p>
-<p>于是自己想开发一个任务调度框架了，不过先要熟悉一下spring cloud到底有哪些内容，于是照着英文文档围观了一下</p>
-<p>##spring-cloud-config-server<br>如果配置是写死在xml或者properties文件里，且需要修改这个配置的时候，咋办？停掉修改打包上传么？用了这个config-server的话，可以不需要改代码方便的修改配置了</p>
-<p>pom.xml中增加如下依赖</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-config-server<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="meta">@EnableConfigServer</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConfigServerApplication</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        SpringApplication.run(ConfigServerApplication.class, args);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><code>application.yml</code></p>
-<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">server:</span></span><br><span class="line"><span class="attr">  port:</span> <span class="number">8888</span></span><br><span class="line"></span><br><span class="line"><span class="attr">management:</span></span><br><span class="line"><span class="attr">  context-path:</span> <span class="string">/admin</span></span><br><span class="line"></span><br><span class="line"><span class="attr">spring:</span></span><br><span class="line"><span class="attr">  cloud:</span></span><br><span class="line"><span class="attr">    config:</span></span><br><span class="line"><span class="attr">      server:</span></span><br><span class="line"><span class="attr">        git:</span></span><br><span class="line"><span class="attr">          uri:</span> <span class="string">/home/choco/soft/gittest/</span></span><br></pre></td></tr></table></figure>
-<p>spring-cloud-config是用git作为配置仓库的，git.url可以是本地的git目录，也可以是远程的git目录，会自动加载该目录下的properties文件，</p>
-<p>我的git仓库里有<br><code>test.properties</code><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">choco.name=chocotan</span><br><span class="line">choco.password=123456</span><br></pre></td></tr></table></figure></p>
-<p>启动后打开浏览器<code>http://localhost:8888/test/master</code><br>大约是这样的格式 [ip:address]/[filename]/[branch]<br>返回</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"name"</span>: <span class="string">"test"</span>,</span><br><span class="line">    <span class="attr">"profiles"</span>: [<span class="string">"master"</span>],</span><br><span class="line">    <span class="attr">"label"</span>: <span class="literal">null</span>,</span><br><span class="line">    <span class="attr">"version"</span>: <span class="string">"2ab9d0ab4f9d88e0eed31702e038d9ec11d7ae16"</span>,</span><br><span class="line">    <span class="attr">"propertySources"</span>: [&#123;</span><br><span class="line">        <span class="attr">"name"</span>: <span class="string">"/home/choco/soft/gittest/test.properties"</span>,</span><br><span class="line">        <span class="attr">"source"</span>: &#123;</span><br><span class="line">            <span class="attr">"choco.password"</span>: <span class="string">"123456"</span>,</span><br><span class="line">            <span class="attr">"choco.name"</span>: <span class="string">"chocotan"</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>嗯 大约完成config-server的配置了</p>
-
-      
-
-      
-        <div class="page-reward">
-          <a href="javascript:;" class="page-reward-btn tooltip-top">
-            <div class="tooltip tooltip-east">
-            <span class="tooltip-item">
-              赏
-            </span>
-            <span class="tooltip-content">
-              <span class="tooltip-text">
-                <span class="tooltip-inner">
-                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
-                  <div class="reward-box">
-                    
-                    
-                  </div>
-                </span>
-              </span>
-            </span>
-          </div>
-          </a>
-        </div>
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
+        <div class="article-info info-on-right">
+          
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
@@ -227,150 +190,23 @@
         		<li class="article-tag-list-item">
         			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">java</a>
         		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">spring</a>
-        		</li>
       		
 		</ul>
 	</div>
 
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/java//" class="article-tag-list-link color5">java</a>
-        		</li>
-      		
-		</ul>
-	</div>
+          
 
-
-      
-
-      
-        
-<div class="share-btn share-icons tooltip-left">
-  <div class="tooltip tooltip-east">
-    <span class="tooltip-item">
-      <a href="javascript:;" class="share-sns share-outer">
-        <i class="icon icon-share"></i>
-      </a>
-    </span>
-    <span class="tooltip-content">
-      <div class="share-wrap">
-        <div class="share-icons">
-          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
-            <i class="icon icon-weibo"></i>
-          </a>
-          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
-            <i class="icon icon-weixin"></i>
-          </a>
-          <a class="qq share-sns" href="javascript:;" data-type="qq">
-            <i class="icon icon-qq"></i>
-          </a>
-          <a class="douban share-sns" href="javascript:;" data-type="douban">
-            <i class="icon icon-douban"></i>
-          </a>
-          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
-            <i class="icon icon-qzone"></i>
-          </a>
-          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
-            <i class="icon icon-facebook"></i>
-          </a>
-          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
-            <i class="icon icon-twitter"></i>
-          </a>
-          <a class="google share-sns" href="javascript:;" data-type="google">
-            <i class="icon icon-google"></i>
-          </a>
         </div>
-      </div>
-    </span>
-  </div>
-</div>
-
-<div class="page-modal wx-share js-wx-box">
-    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
-    <p>扫一扫，分享到微信</p>
-    <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http://blog.loli.io/2016/01/29/spring-cloud-01/" alt="微信分享二维码">
-    </div>
-</div>
-
-<div class="mask js-mask"></div>
-      
-      <div class="clearfix"></div>
-    </div>
+        <div class="clearfix"></div>
+    </header>
   </div>
 </article>
-
-  
-<nav id="article-nav">
-  
-    <a href="/2016/02/21/spring-cloud-netflix-01/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          Spring Cloud学习笔记——Netflix的那些东西
-        
-      </div>
-    </a>
   
   
-    <a href="/2016/01/28/换成Hexo了！/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">换成Hexo了！</div>
-      <i class="icon-circle-right"></i>
-    </a>
-  
-</nav>
-
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-  
-  
+    </div></section>
   
 
-  
-
-  
-
-  
-  <div id="gitment-ctn"></div> 
-<link rel="stylesheet" href="//imsun.github.io/gitment/style/default.css">
-<script src="//imsun.github.io/gitment/dist/gitment.browser.js"></script>
-<script>
-var gitment = new Gitment({
-  id: "http://blog.loli.io/2016/01/29/spring-cloud-01/",
-  owner: 'chocotan',
-  repo: 'chocotan.github.io',
-  oauth: {
-    client_id: '957284a372440bcf40f7',
-    client_secret: '23e1eda7961136ed50b511624ab7f448fe635e7d',
-  },
-})
-gitment.render('gitment-ctn')
-</script>
-  
+    
 
 
           </div>
@@ -393,8 +229,8 @@ gitment.render('gitment-ctn')
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: true,
-		isArchive: false,
+		isPost: false,
+		isArchive: true,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,

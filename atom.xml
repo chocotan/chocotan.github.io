@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://blog.loli.io/"/>
-  <updated>2018-03-15T00:47:10.493Z</updated>
+  <updated>2018-06-09T12:48:25.845Z</updated>
   <id>http://blog.loli.io/</id>
   
   <author>
@@ -15,6 +15,29 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>自制的一个爬虫nekocat</title>
+    <link href="http://blog.loli.io/2018/06/09/spider-01/"/>
+    <id>http://blog.loli.io/2018/06/09/spider-01/</id>
+    <published>2018-06-09T12:32:29.000Z</published>
+    <updated>2018-06-09T12:48:25.845Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="想法"><a href="#想法" class="headerlink" title="想法"></a>想法</h2><p>最近想着爬一个IT技术站，找了JAVA的一些爬虫围观了下，嗯…都不太合心意，还是自制一个吧，参考了 <a href="https://github.com/biezhi/elves" target="_blank" rel="noopener">https://github.com/biezhi/elves</a> 的思路，于是就开工了，大约一两周摸鱼的时间，就基本完成了，可以来github围观：<a href="https://github.com/chocotan/nekocat" target="_blank" rel="noopener">https://github.com/chocotan/nekocat</a><br>，名字是随便取的。</p><h2 id="功能"><a href="#功能" class="headerlink" title="功能"></a>功能</h2><ol><li>定时执行</li><li>自定义UA、代理池</li><li>支持多线程</li><li>可自定义Downloader实现headless chrome（大概）</li><li>失败重试</li></ol><h2 id="成果"><a href="#成果" class="headerlink" title="成果"></a>成果</h2><p>于是就找了一些网站开始爬了，注册了个域名，做了个界面，挂上了google adsense</p><p>网址：<a href="http://www.codetd.com" target="_blank" rel="noopener">www.codetd.com</a></p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h2 id=&quot;想法&quot;&gt;&lt;a href=&quot;#想法&quot; class=&quot;headerlink&quot; title=&quot;想法&quot;&gt;&lt;/a&gt;想法&lt;/h2&gt;&lt;p&gt;最近想着爬一个IT技术站，找了JAVA的一些爬虫围观了下，嗯…都不太合心意，还是自制一个吧，参考了 &lt;a href=&quot;https://git
+      
+    
+    </summary>
+    
+    
+      <category term="java" scheme="http://blog.loli.io/tags/java/"/>
+    
+  </entry>
   
   <entry>
     <title>RxJava使用线程池</title>
