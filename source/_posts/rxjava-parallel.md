@@ -1,7 +1,7 @@
 ---
 title: RxJava使用线程池
 date: 2018-03-11 13:19:47
-tags: java,rxjava
+tags: [java,rxjava]
 ---
 
 
@@ -82,3 +82,11 @@ Flowable.just(1, 2, 3, 4, 5)
 有两个要注意的地方
 1. RxJava在执行并发的时候，并不会使用Executor的maximumPollSize这个属性，corePollSize有多大，那么最大就有多少个线程
 2. parallel()有一个重载方法可以传入并发数，默认为cpu核心数，在单核的服务器上这个数字是1，也就是不管Executor有多少个线程，只会用一个线程去执行任务
+
+
+
+
+## 后续
+最近发现在使用UnicastProcessor和ParallelFlowable的时候有cpu占用高的情况，经过跟踪发现是这样的问题：
+
+Flowable是支持背压的，所以在元素弹出过快的时候会抛出异常，而我又使用了retry，使得在抛出异常的时候会重新订阅Flowable，而UnicastProcessor只能被订阅一次，所以抛出了大量的IllegalStateException
