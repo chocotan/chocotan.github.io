@@ -6,20 +6,19 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://blog.loli.io">
-  <title>RxJava使用线程池 | 天羽ちよこ的新个人站点</title>
+  <title>日麻折腾笔记-03-向听数和有效牌 | 天羽ちよこ的新个人站点</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="最近在瞎折腾rxjava，写了一段自认为能并发执行的代码如下： 12345678910// 大小为5的线程池ThreadPoolExecutor exec = new ThreadPoolExecutor(    5, 5, 200, TimeUnit.SECONDS, new LinkedBlockingQueue&amp;lt;&amp;gt;());Flowable.just(1, 2, 3, 4, 5)">
-<meta name="keywords" content="java,rxjava">
+  <meta name="description" content="喵！">
 <meta property="og:type" content="article">
-<meta property="og:title" content="RxJava使用线程池">
-<meta property="og:url" content="http://blog.loli.io/2018/03/11/rxjava-parallel/index.html">
+<meta property="og:title" content="日麻折腾笔记-03-向听数和有效牌">
+<meta property="og:url" content="http://blog.loli.io/2019/06/10/日麻折腾笔记-03-向听数和有效牌/index.html">
 <meta property="og:site_name" content="天羽ちよこ的新个人站点">
-<meta property="og:description" content="最近在瞎折腾rxjava，写了一段自认为能并发执行的代码如下： 12345678910// 大小为5的线程池ThreadPoolExecutor exec = new ThreadPoolExecutor(    5, 5, 200, TimeUnit.SECONDS, new LinkedBlockingQueue&amp;lt;&amp;gt;());Flowable.just(1, 2, 3, 4, 5)">
+<meta property="og:description" content="喵！">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:updated_time" content="2019-06-10T02:51:18.476Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="RxJava使用线程池">
-<meta name="twitter:description" content="最近在瞎折腾rxjava，写了一段自认为能并发执行的代码如下： 12345678910// 大小为5的线程池ThreadPoolExecutor exec = new ThreadPoolExecutor(    5, 5, 200, TimeUnit.SECONDS, new LinkedBlockingQueue&amp;lt;&amp;gt;());Flowable.just(1, 2, 3, 4, 5)">
+<meta name="twitter:title" content="日麻折腾笔记-03-向听数和有效牌">
+<meta name="twitter:description" content="喵！">
   
     <link rel="alternative" href="/atom.xml" title="天羽ちよこ的新个人站点" type="application/atom+xml">
   
@@ -155,52 +154,27 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-rxjava-parallel" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-日麻折腾笔记-03-向听数和有效牌" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      RxJava使用线程池
+      日麻折腾笔记-03-向听数和有效牌
     </h1>
   
 
         
-        <a href="/2018/03/11/rxjava-parallel/" class="archive-article-date">
-  	<time datetime="2018-03-11T05:19:47.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-03-11</time>
+        <a href="/2019/06/10/日麻折腾笔记-03-向听数和有效牌/" class="archive-article-date">
+  	<time datetime="2019-06-10T02:28:43.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-06-10</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>最近在瞎折腾rxjava，写了一段自认为能并发执行的代码如下：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 大小为5的线程池</span></span><br><span class="line">ThreadPoolExecutor exec = <span class="keyword">new</span> ThreadPoolExecutor(</span><br><span class="line">    <span class="number">5</span>, <span class="number">5</span>, <span class="number">200</span>, TimeUnit.SECONDS, <span class="keyword">new</span> LinkedBlockingQueue&lt;&gt;());</span><br><span class="line"></span><br><span class="line">Flowable.just(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>)</span><br><span class="line">        .subscribeOn(Schedulers.from(exec))</span><br><span class="line">        .subscribe(i -&gt; &#123;</span><br><span class="line">            Thread.sleep(<span class="number">1000L</span>);</span><br><span class="line">            System.out.println(i + <span class="string">"\t"</span> + Thread.currentThread().getName());</span><br><span class="line">        &#125;);</span><br></pre></td></tr></table></figure>
-<p>由于我在subscribe中sleep了1s，所以我认为这五个数字会并发的执行到subscribe中去，期待会有如下的输出</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">1	pool-1-thread-1</span><br><span class="line">2	pool-1-thread-2</span><br><span class="line">3	pool-1-thread-3</span><br><span class="line">4	pool-1-thread-4</span><br><span class="line">5	pool-1-thread-5</span><br></pre></td></tr></table></figure>
-<p>然而事与愿违，实际的输出是这样的<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">1	pool-1-thread-1</span><br><span class="line">2	pool-1-thread-1</span><br><span class="line">3	pool-1-thread-1</span><br><span class="line">4	pool-1-thread-1</span><br><span class="line">5	pool-1-thread-1</span><br></pre></td></tr></table></figure></p>
-<p>嗯嗯？为什么没有并发执行subscribe里的代码呢？我以为是我自己的代码有问题，又陆续尝试了内置的一些Scheduler，consumer均是在同一个线程中执行的，好吧，看来是我理解错rxjava的Schedulers了，这货的from方法接收一个Executor参数，并不是指接下来的任务会提交给这个线程池并发的执行。</p>
-<p>这大概也是RxJava和CompletableFuture的区别之一吧。搜索了一圈，用rxjava实现并发主要以以下几个方法</p>
-<ol>
-<li><p>在flatMap中使用obseveOn</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Flowable.just(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>)</span><br><span class="line">        .flatMap(i -&gt; Flowable.just(i).observeOn(Schedulers.from(exec))</span><br><span class="line">                .doOnNext(d -&gt; &#123;</span><br><span class="line">                    System.out.println(d + <span class="string">"\t"</span> + Thread.currentThread().getName());</span><br><span class="line">                    Thread.sleep(<span class="number">1000L</span>);</span><br><span class="line">                &#125;))</span><br><span class="line">        .subscribe();</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>在flatMap中使用Future</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Flowable.just(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>)</span><br><span class="line">        .flatMap(i -&gt; Flowable.fromFuture(CompletableFuture.completedFuture(i), Schedulers.from(exec))</span><br><span class="line">                .doOnNext(d -&gt; &#123;</span><br><span class="line">                    System.out.println(d + <span class="string">"\t"</span> + Thread.currentThread().getName());</span><br><span class="line">                    Thread.sleep(<span class="number">1000L</span>);</span><br><span class="line">                &#125;)</span><br><span class="line">        )</span><br><span class="line">        .subscribe();</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>使用ParallelFlowable</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Flowable.just(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>)</span><br><span class="line">        .parallel()</span><br><span class="line">        .runOn(Schedulers.from(exec))</span><br><span class="line">        .doOnNext(d -&gt; &#123;</span><br><span class="line">            System.out.println(d + <span class="string">"\t"</span> + Thread.currentThread().getName());</span><br><span class="line">            Thread.sleep(<span class="number">1000L</span>);</span><br><span class="line">        &#125;)</span><br><span class="line">        .sequential()</span><br><span class="line">        .subscribe();</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<p>有两个要注意的地方</p>
-<ol>
-<li>RxJava在执行并发的时候，并不会使用Executor的maximumPollSize这个属性，corePollSize有多大，那么最大就有多少个线程</li>
-<li>parallel()有一个重载方法可以传入并发数，默认为cpu核心数，在单核的服务器上这个数字是1，也就是不管Executor有多少个线程，只会用一个线程去执行任务</li>
-</ol>
-<h2 id="后续"><a href="#后续" class="headerlink" title="后续"></a>后续</h2><p>最近发现在使用UnicastProcessor和ParallelFlowable的时候有cpu占用高的情况，经过跟踪发现是这样的问题：</p>
-<p>Flowable是支持背压的，所以在元素弹出过快的时候会抛出异常，而我又使用了retry，使得在抛出异常的时候会重新订阅Flowable，而UnicastProcessor只能被订阅一次，所以抛出了大量的IllegalStateException</p>
-
+        
       
 
       
@@ -229,21 +203,6 @@
     <div class="article-info article-info-index">
       
       
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">java</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">rxjava</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
       
 
       
@@ -294,7 +253,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http://blog.loli.io/2018/03/11/rxjava-parallel/" alt="微信分享二维码">
+      <img src="//pan.baidu.com/share/qrcode?url=http://blog.loli.io/2019/06/10/日麻折腾笔记-03-向听数和有效牌/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -308,18 +267,9 @@
   
 <nav id="article-nav">
   
-    <a href="/2018/06/09/spider-01/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          自制的一个爬虫nekocat
-        
-      </div>
-    </a>
   
-  
-    <a href="/2016/01/28/换成Hexo了！/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">换成Hexo了！</div>
+    <a href="/2019/06/10/日麻折腾笔记-02-听牌的判断/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">日麻折腾笔记-02-听牌的判断</div>
       <i class="icon-circle-right"></i>
     </a>
   
@@ -511,7 +461,7 @@ function bit_rol(num, cnt)
 }
 /*-------------------------------------- md5 calculate function end --------------------------------------*/
 
-var url = 'http://blog.loli.io/2018/03/11/rxjava-parallel/'
+var url = 'http://blog.loli.io/2019/06/10/日麻折腾笔记-03-向听数和有效牌/'
 var gitalk = new Gitalk({
   id: b64_md5(url), 
   clientID: '957284a372440bcf40f7',
