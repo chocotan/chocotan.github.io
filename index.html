@@ -155,130 +155,6 @@
           <div id="js-content" class="content-ll">
             
   
-    <article id="post-日麻折腾笔记-03-向听数和有效牌" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/06/10/日麻折腾笔记-03-向听数和有效牌/">日麻折腾笔记-03-向听数和有效牌</a>
-    </h1>
-  
-
-        
-        <a href="/2019/06/10/日麻折腾笔记-03-向听数和有效牌/" class="archive-article-date">
-  	<time datetime="2019-06-10T02:28:43.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-06-10</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/06/10/日麻折腾笔记-03-向听数和有效牌/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-日麻折腾笔记-02-听牌的判断" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/06/10/日麻折腾笔记-02-听牌的判断/">日麻折腾笔记-02-听牌的判断</a>
-    </h1>
-  
-
-        
-        <a href="/2019/06/10/日麻折腾笔记-02-听牌的判断/" class="archive-article-date">
-  	<time datetime="2019-06-10T02:28:30.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-06-10</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/06/10/日麻折腾笔记-02-听牌的判断/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
     <article id="post-日麻折腾笔记-01-和牌的判断" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -299,7 +175,50 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        
+        <h2 id="手牌和牌时的组成"><a href="#手牌和牌时的组成" class="headerlink" title="手牌和牌时的组成"></a>手牌和牌时的组成</h2><p>日本麻将除了特殊牌形（七对和国士）以外，都是 <code>a个顺子+b个刻子+1个雀头</code> 的形状，这里不管是门清还是非门清，都是这样。其中a、b均大于等于0。</p>
+<p>我们可以将手牌分解成上面的形式，如果能够满足条件，则为和牌，然而手牌的组成有很多种，比如下面的手牌（九莲宝灯）：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">11123455678999s</span><br></pre></td></tr></table></figure>
+<p>我们可以分解为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">111 234 55 678 999</span><br></pre></td></tr></table></figure></p>
+<p>可以和牌</p>
+<p>也可以分解为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">11 123 345 567 8 999</span><br></pre></td></tr></table></figure></p>
+<p>无法和牌</p>
+<p>可以看到关键在于怎么对手牌中的顺子和刻子分组</p>
+<h2 id="从雀头入手"><a href="#从雀头入手" class="headerlink" title="从雀头入手"></a>从雀头入手</h2><p>不管怎么分组，手牌都要有一个<code>雀头</code>，所以我们先确定雀头</p>
+<p>手牌中，数量大于等于2的牌都能作为雀头</p>
+<p>当确定好雀头之后，就要将剩余的手牌分解为 顺子+刻子的情况，在上面的示例中，当选取5s作为雀头后，剩余的牌为 111234678999 ，我可以将 11123 认为是 111+23的形式，也可以是 11+123的形式，用程序也是比较方便实现的。</p>
+<h2 id="我的思路"><a href="#我的思路" class="headerlink" title="我的思路"></a>我的思路</h2><p>将手牌排序后，找到n个雀头</p>
+<p>对于每个雀头，都执行下面的判断逻辑</p>
+<ol>
+<li>去除雀头，得到剩余手牌P</li>
+<li>对P按照牌进行分组后排序</li>
+<li>对于排序后的牌，如果是连续三张牌，则将这三张牌作为一个顺子</li>
+<li>将顺子的三张牌从P中删除</li>
+<li>重复2-3-4步骤，直到无顺子</li>
+<li>对P进行分组</li>
+<li>如果某牌数量是3，则将这三张牌作为一个刻子</li>
+<li>将刻子从P中删除</li>
+<li>重复6-7-8步骤，直到无刻子</li>
+<li>如果P现在无牌，则表示此时能够和牌，如果有牌，表示不能和牌</li>
+</ol>
+<h2 id="是否听牌的判断"><a href="#是否听牌的判断" class="headerlink" title="是否听牌的判断"></a>是否听牌的判断</h2><p>和牌和听牌不太一样，和牌是14张，听牌是13张，不管是不是门清状态，听牌必定币和牌少一张，少的是哪张牌呢？必定是下面三种情况中的其中一种</p>
+<ol>
+<li>听雀头</li>
+<li>听刻子中的一张</li>
+<li>听顺子中的一张</li>
+</ol>
+<p>也就是已有的手牌，加上上面三种中的其中一种，能够和牌，那我只需要将可能和牌的牌都列出来，每种都判断是否和牌就可以了。</p>
+<p>对于自己的程序写的有没有问题，可以用九莲宝灯来验证一下</p>
+<h2 id="类的定义"><a href="#类的定义" class="headerlink" title="类的定义"></a>类的定义</h2><p>首先是类型的枚举，定义了万、索、筒、字四种牌<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">enum</span> Type &#123;</span><br><span class="line">    m,</span><br><span class="line">    s,</span><br><span class="line">    p,</span><br><span class="line">    z;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>一张牌是由数字+类型组成的，所以牌类如下</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Pai</span> <span class="keyword">implements</span> <span class="title">Comparable</span>&lt;<span class="title">Pai</span>&gt; </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Integer number;</span><br><span class="line">    <span class="keyword">private</span> Type type;</span><br><span class="line">    ... getters</span><br><span class="line">    ... setters</span><br></pre></td></tr></table></figure>
+<p>对于字牌，一共有东南西北中发白，七种类型，对应的number取值为1到7，在编码时还需要注意字牌是无法组成顺子的。</p>
+<p>对于一场比赛，牌的数量类型都是早就决定好不会变的，唯一变的就是牌的顺序，我们只需定义好一个所有牌的集合，在有需要生成牌山的时候，直接将其打乱使用即可。</p>
+<p>宝牌是否要在<code>class Pai</code>中定义？由于每场比赛，宝牌是变化的，与场况有关，所以不太适合放在其中。但是有一个例外——赤宝牌，我本想在Pai中增加一个属性aka/red，标示是否是赤宝牌，但想到现在只是在对手牌进行和牌、听牌的判断，增加这个字段与否和现在要解决的问题无关，索性就不管了，宝牌之类，留着后面再统一处理吧。</p>
+<h2 id="实际演示"><a href="#实际演示" class="headerlink" title="实际演示"></a>实际演示</h2><p><img src="https://b1.loli.io/images/GjMLe.png" alt="image.png"></p>
+<blockquote>
+<p>相关代码会在整理后放到github上</p>
+</blockquote>
+
       
 
       
@@ -319,6 +238,24 @@
       <div class="clearfix"></div>
     </div>
   </div>
+
+  <!-- 来必力City版安装代码 -->
+<div id="lv-container" data-id="city" data-uid="MTAyMC80NDY4Ni8yMTIxMg==">
+ <script type="text/javascript">
+   (function(d, s) {
+       var j, e = d.getElementsByTagName(s)[0];
+
+       if (typeof LivereTower === 'function') { return; }
+
+       j = d.createElement(s);
+       j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+       j.async = true;
+
+       e.parentNode.insertBefore(j, e);
+   })(document, 'script');
+ </script>
+<noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+</div>
 </article>
 
 <aside class="wrap-side-operation">
@@ -402,6 +339,24 @@
       <div class="clearfix"></div>
     </div>
   </div>
+
+  <!-- 来必力City版安装代码 -->
+<div id="lv-container" data-id="city" data-uid="MTAyMC80NDY4Ni8yMTIxMg==">
+ <script type="text/javascript">
+   (function(d, s) {
+       var j, e = d.getElementsByTagName(s)[0];
+
+       if (typeof LivereTower === 'function') { return; }
+
+       j = d.createElement(s);
+       j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+       j.async = true;
+
+       e.parentNode.insertBefore(j, e);
+   })(document, 'script');
+ </script>
+<noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+</div>
 </article>
 
 <aside class="wrap-side-operation">
@@ -504,6 +459,24 @@
       <div class="clearfix"></div>
     </div>
   </div>
+
+  <!-- 来必力City版安装代码 -->
+<div id="lv-container" data-id="city" data-uid="MTAyMC80NDY4Ni8yMTIxMg==">
+ <script type="text/javascript">
+   (function(d, s) {
+       var j, e = d.getElementsByTagName(s)[0];
+
+       if (typeof LivereTower === 'function') { return; }
+
+       j = d.createElement(s);
+       j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+       j.async = true;
+
+       e.parentNode.insertBefore(j, e);
+   })(document, 'script');
+ </script>
+<noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+</div>
 </article>
 
 <aside class="wrap-side-operation">
@@ -569,6 +542,24 @@
       <div class="clearfix"></div>
     </div>
   </div>
+
+  <!-- 来必力City版安装代码 -->
+<div id="lv-container" data-id="city" data-uid="MTAyMC80NDY4Ni8yMTIxMg==">
+ <script type="text/javascript">
+   (function(d, s) {
+       var j, e = d.getElementsByTagName(s)[0];
+
+       if (typeof LivereTower === 'function') { return; }
+
+       j = d.createElement(s);
+       j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+       j.async = true;
+
+       e.parentNode.insertBefore(j, e);
+   })(document, 'script');
+ </script>
+<noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+</div>
 </article>
 
 <aside class="wrap-side-operation">

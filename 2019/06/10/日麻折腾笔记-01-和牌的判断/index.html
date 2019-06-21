@@ -8,17 +8,19 @@
   <link rel="dns-prefetch" href="http://blog.loli.io">
   <title>日麻折腾笔记-01-和牌的判断 | 天羽ちよこ的新个人站点</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="喵！">
+  <meta name="description" content="手牌和牌时的组成日本麻将除了特殊牌形（七对和国士）以外，都是 a个顺子+b个刻子+1个雀头 的形状，这里不管是门清还是非门清，都是这样。其中a、b均大于等于0。 我们可以将手牌分解成上面的形式，如果能够满足条件，则为和牌，然而手牌的组成有很多种，比如下面的手牌（九莲宝灯）： 111123455678999s 我们可以分解为1111 234 55 678 999 可以和牌 也可以分解为111 123">
 <meta property="og:type" content="article">
 <meta property="og:title" content="日麻折腾笔记-01-和牌的判断">
 <meta property="og:url" content="http://blog.loli.io/2019/06/10/日麻折腾笔记-01-和牌的判断/index.html">
 <meta property="og:site_name" content="天羽ちよこ的新个人站点">
-<meta property="og:description" content="喵！">
+<meta property="og:description" content="手牌和牌时的组成日本麻将除了特殊牌形（七对和国士）以外，都是 a个顺子+b个刻子+1个雀头 的形状，这里不管是门清还是非门清，都是这样。其中a、b均大于等于0。 我们可以将手牌分解成上面的形式，如果能够满足条件，则为和牌，然而手牌的组成有很多种，比如下面的手牌（九莲宝灯）： 111123455678999s 我们可以分解为1111 234 55 678 999 可以和牌 也可以分解为111 123">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:updated_time" content="2019-06-10T02:51:18.476Z">
+<meta property="og:image" content="https://b1.loli.io/images/GjMLe.png">
+<meta property="og:updated_time" content="2019-06-21T02:11:02.229Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="日麻折腾笔记-01-和牌的判断">
-<meta name="twitter:description" content="喵！">
+<meta name="twitter:description" content="手牌和牌时的组成日本麻将除了特殊牌形（七对和国士）以外，都是 a个顺子+b个刻子+1个雀头 的形状，这里不管是门清还是非门清，都是这样。其中a、b均大于等于0。 我们可以将手牌分解成上面的形式，如果能够满足条件，则为和牌，然而手牌的组成有很多种，比如下面的手牌（九莲宝灯）： 111123455678999s 我们可以分解为1111 234 55 678 999 可以和牌 也可以分解为111 123">
+<meta name="twitter:image" content="https://b1.loli.io/images/GjMLe.png">
   
     <link rel="alternative" href="/atom.xml" title="天羽ちよこ的新个人站点" type="application/atom+xml">
   
@@ -174,7 +176,50 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        
+        <h2 id="手牌和牌时的组成"><a href="#手牌和牌时的组成" class="headerlink" title="手牌和牌时的组成"></a>手牌和牌时的组成</h2><p>日本麻将除了特殊牌形（七对和国士）以外，都是 <code>a个顺子+b个刻子+1个雀头</code> 的形状，这里不管是门清还是非门清，都是这样。其中a、b均大于等于0。</p>
+<p>我们可以将手牌分解成上面的形式，如果能够满足条件，则为和牌，然而手牌的组成有很多种，比如下面的手牌（九莲宝灯）：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">11123455678999s</span><br></pre></td></tr></table></figure>
+<p>我们可以分解为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">111 234 55 678 999</span><br></pre></td></tr></table></figure></p>
+<p>可以和牌</p>
+<p>也可以分解为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">11 123 345 567 8 999</span><br></pre></td></tr></table></figure></p>
+<p>无法和牌</p>
+<p>可以看到关键在于怎么对手牌中的顺子和刻子分组</p>
+<h2 id="从雀头入手"><a href="#从雀头入手" class="headerlink" title="从雀头入手"></a>从雀头入手</h2><p>不管怎么分组，手牌都要有一个<code>雀头</code>，所以我们先确定雀头</p>
+<p>手牌中，数量大于等于2的牌都能作为雀头</p>
+<p>当确定好雀头之后，就要将剩余的手牌分解为 顺子+刻子的情况，在上面的示例中，当选取5s作为雀头后，剩余的牌为 111234678999 ，我可以将 11123 认为是 111+23的形式，也可以是 11+123的形式，用程序也是比较方便实现的。</p>
+<h2 id="我的思路"><a href="#我的思路" class="headerlink" title="我的思路"></a>我的思路</h2><p>将手牌排序后，找到n个雀头</p>
+<p>对于每个雀头，都执行下面的判断逻辑</p>
+<ol>
+<li>去除雀头，得到剩余手牌P</li>
+<li>对P按照牌进行分组后排序</li>
+<li>对于排序后的牌，如果是连续三张牌，则将这三张牌作为一个顺子</li>
+<li>将顺子的三张牌从P中删除</li>
+<li>重复2-3-4步骤，直到无顺子</li>
+<li>对P进行分组</li>
+<li>如果某牌数量是3，则将这三张牌作为一个刻子</li>
+<li>将刻子从P中删除</li>
+<li>重复6-7-8步骤，直到无刻子</li>
+<li>如果P现在无牌，则表示此时能够和牌，如果有牌，表示不能和牌</li>
+</ol>
+<h2 id="是否听牌的判断"><a href="#是否听牌的判断" class="headerlink" title="是否听牌的判断"></a>是否听牌的判断</h2><p>和牌和听牌不太一样，和牌是14张，听牌是13张，不管是不是门清状态，听牌必定币和牌少一张，少的是哪张牌呢？必定是下面三种情况中的其中一种</p>
+<ol>
+<li>听雀头</li>
+<li>听刻子中的一张</li>
+<li>听顺子中的一张</li>
+</ol>
+<p>也就是已有的手牌，加上上面三种中的其中一种，能够和牌，那我只需要将可能和牌的牌都列出来，每种都判断是否和牌就可以了。</p>
+<p>对于自己的程序写的有没有问题，可以用九莲宝灯来验证一下</p>
+<h2 id="类的定义"><a href="#类的定义" class="headerlink" title="类的定义"></a>类的定义</h2><p>首先是类型的枚举，定义了万、索、筒、字四种牌<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">enum</span> Type &#123;</span><br><span class="line">    m,</span><br><span class="line">    s,</span><br><span class="line">    p,</span><br><span class="line">    z;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>一张牌是由数字+类型组成的，所以牌类如下</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Pai</span> <span class="keyword">implements</span> <span class="title">Comparable</span>&lt;<span class="title">Pai</span>&gt; </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Integer number;</span><br><span class="line">    <span class="keyword">private</span> Type type;</span><br><span class="line">    ... getters</span><br><span class="line">    ... setters</span><br></pre></td></tr></table></figure>
+<p>对于字牌，一共有东南西北中发白，七种类型，对应的number取值为1到7，在编码时还需要注意字牌是无法组成顺子的。</p>
+<p>对于一场比赛，牌的数量类型都是早就决定好不会变的，唯一变的就是牌的顺序，我们只需定义好一个所有牌的集合，在有需要生成牌山的时候，直接将其打乱使用即可。</p>
+<p>宝牌是否要在<code>class Pai</code>中定义？由于每场比赛，宝牌是变化的，与场况有关，所以不太适合放在其中。但是有一个例外——赤宝牌，我本想在Pai中增加一个属性aka/red，标示是否是赤宝牌，但想到现在只是在对手牌进行和牌、听牌的判断，增加这个字段与否和现在要解决的问题无关，索性就不管了，宝牌之类，留着后面再统一处理吧。</p>
+<h2 id="实际演示"><a href="#实际演示" class="headerlink" title="实际演示"></a>实际演示</h2><p><img src="https://b1.loli.io/images/GjMLe.png" alt="image.png"></p>
+<blockquote>
+<p>相关代码会在整理后放到github上</p>
+</blockquote>
+
       
 
       
@@ -262,19 +307,28 @@
       <div class="clearfix"></div>
     </div>
   </div>
+
+  <!-- 来必力City版安装代码 -->
+<div id="lv-container" data-id="city" data-uid="MTAyMC80NDY4Ni8yMTIxMg==">
+ <script type="text/javascript">
+   (function(d, s) {
+       var j, e = d.getElementsByTagName(s)[0];
+
+       if (typeof LivereTower === 'function') { return; }
+
+       j = d.createElement(s);
+       j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+       j.async = true;
+
+       e.parentNode.insertBefore(j, e);
+   })(document, 'script');
+ </script>
+<noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+</div>
 </article>
 
   
 <nav id="article-nav">
-  
-    <a href="/2019/06/10/日麻折腾笔记-02-听牌的判断/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          日麻折腾笔记-02-听牌的判断
-        
-      </div>
-    </a>
   
   
     <a href="/2018/06/09/spider-01/" id="article-nav-older" class="article-nav-link-wrap">
@@ -304,185 +358,6 @@
 
 
   
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
-<script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
-<div id="gitalk-container"></div>
-<script>
-
-/*-------------------------------------- md5 calculate function begin --------------------------------------*/
-var b64pad  = ""; /* base-64 pad character. "=" for strict RFC compliance   */
-var chrsz   = 8;  /* bits per input character. 8 - ASCII; 16 - Unicode      */
-function b64_md5(s){ return binl2b64(core_md5(str2binl(s), s.length * chrsz));}
-
-function str2binl(str) {
-  var bin = Array();
-  var mask = (1 << chrsz) - 1;
-  for(var i = 0; i < str.length * chrsz; i += chrsz)
-  bin[i>>5] |= (str.charCodeAt(i / chrsz) & mask) << (i%32);
-  return bin;
-}
-
-function core_md5(x, len)
-{
-  /* append padding */
-  x[len >> 5] |= 0x80 << ((len) % 32);
-  x[(((len + 64) >>> 9) << 4) + 14] = len;
-
-  var a =  1732584193;
-  var b = -271733879;
-  var c = -1732584194;
-  var d =  271733878;
-
-  for(var i = 0; i < x.length; i += 16)
-  {
-    var olda = a;
-    var oldb = b;
-    var oldc = c;
-    var oldd = d;
-
-    a = md5_ff(a, b, c, d, x[i+ 0], 7 , -680876936);
-    d = md5_ff(d, a, b, c, x[i+ 1], 12, -389564586);
-    c = md5_ff(c, d, a, b, x[i+ 2], 17,  606105819);
-    b = md5_ff(b, c, d, a, x[i+ 3], 22, -1044525330);
-    a = md5_ff(a, b, c, d, x[i+ 4], 7 , -176418897);
-    d = md5_ff(d, a, b, c, x[i+ 5], 12,  1200080426);
-    c = md5_ff(c, d, a, b, x[i+ 6], 17, -1473231341);
-    b = md5_ff(b, c, d, a, x[i+ 7], 22, -45705983);
-    a = md5_ff(a, b, c, d, x[i+ 8], 7 ,  1770035416);
-    d = md5_ff(d, a, b, c, x[i+ 9], 12, -1958414417);
-    c = md5_ff(c, d, a, b, x[i+10], 17, -42063);
-    b = md5_ff(b, c, d, a, x[i+11], 22, -1990404162);
-    a = md5_ff(a, b, c, d, x[i+12], 7 ,  1804603682);
-    d = md5_ff(d, a, b, c, x[i+13], 12, -40341101);
-    c = md5_ff(c, d, a, b, x[i+14], 17, -1502002290);
-    b = md5_ff(b, c, d, a, x[i+15], 22,  1236535329);
-
-    a = md5_gg(a, b, c, d, x[i+ 1], 5 , -165796510);
-    d = md5_gg(d, a, b, c, x[i+ 6], 9 , -1069501632);
-    c = md5_gg(c, d, a, b, x[i+11], 14,  643717713);
-    b = md5_gg(b, c, d, a, x[i+ 0], 20, -373897302);
-    a = md5_gg(a, b, c, d, x[i+ 5], 5 , -701558691);
-    d = md5_gg(d, a, b, c, x[i+10], 9 ,  38016083);
-    c = md5_gg(c, d, a, b, x[i+15], 14, -660478335);
-    b = md5_gg(b, c, d, a, x[i+ 4], 20, -405537848);
-    a = md5_gg(a, b, c, d, x[i+ 9], 5 ,  568446438);
-    d = md5_gg(d, a, b, c, x[i+14], 9 , -1019803690);
-    c = md5_gg(c, d, a, b, x[i+ 3], 14, -187363961);
-    b = md5_gg(b, c, d, a, x[i+ 8], 20,  1163531501);
-    a = md5_gg(a, b, c, d, x[i+13], 5 , -1444681467);
-    d = md5_gg(d, a, b, c, x[i+ 2], 9 , -51403784);
-    c = md5_gg(c, d, a, b, x[i+ 7], 14,  1735328473);
-    b = md5_gg(b, c, d, a, x[i+12], 20, -1926607734);
-
-    a = md5_hh(a, b, c, d, x[i+ 5], 4 , -378558);
-    d = md5_hh(d, a, b, c, x[i+ 8], 11, -2022574463);
-    c = md5_hh(c, d, a, b, x[i+11], 16,  1839030562);
-    b = md5_hh(b, c, d, a, x[i+14], 23, -35309556);
-    a = md5_hh(a, b, c, d, x[i+ 1], 4 , -1530992060);
-    d = md5_hh(d, a, b, c, x[i+ 4], 11,  1272893353);
-    c = md5_hh(c, d, a, b, x[i+ 7], 16, -155497632);
-    b = md5_hh(b, c, d, a, x[i+10], 23, -1094730640);
-    a = md5_hh(a, b, c, d, x[i+13], 4 ,  681279174);
-    d = md5_hh(d, a, b, c, x[i+ 0], 11, -358537222);
-    c = md5_hh(c, d, a, b, x[i+ 3], 16, -722521979);
-    b = md5_hh(b, c, d, a, x[i+ 6], 23,  76029189);
-    a = md5_hh(a, b, c, d, x[i+ 9], 4 , -640364487);
-    d = md5_hh(d, a, b, c, x[i+12], 11, -421815835);
-    c = md5_hh(c, d, a, b, x[i+15], 16,  530742520);
-    b = md5_hh(b, c, d, a, x[i+ 2], 23, -995338651);
-
-    a = md5_ii(a, b, c, d, x[i+ 0], 6 , -198630844);
-    d = md5_ii(d, a, b, c, x[i+ 7], 10,  1126891415);
-    c = md5_ii(c, d, a, b, x[i+14], 15, -1416354905);
-    b = md5_ii(b, c, d, a, x[i+ 5], 21, -57434055);
-    a = md5_ii(a, b, c, d, x[i+12], 6 ,  1700485571);
-    d = md5_ii(d, a, b, c, x[i+ 3], 10, -1894986606);
-    c = md5_ii(c, d, a, b, x[i+10], 15, -1051523);
-    b = md5_ii(b, c, d, a, x[i+ 1], 21, -2054922799);
-    a = md5_ii(a, b, c, d, x[i+ 8], 6 ,  1873313359);
-    d = md5_ii(d, a, b, c, x[i+15], 10, -30611744);
-    c = md5_ii(c, d, a, b, x[i+ 6], 15, -1560198380);
-    b = md5_ii(b, c, d, a, x[i+13], 21,  1309151649);
-    a = md5_ii(a, b, c, d, x[i+ 4], 6 , -145523070);
-    d = md5_ii(d, a, b, c, x[i+11], 10, -1120210379);
-    c = md5_ii(c, d, a, b, x[i+ 2], 15,  718787259);
-    b = md5_ii(b, c, d, a, x[i+ 9], 21, -343485551);
-
-    a = safe_add(a, olda);
-    b = safe_add(b, oldb);
-    c = safe_add(c, oldc);
-    d = safe_add(d, oldd);
-  }
-  return Array(a, b, c, d);
-
-}
-
-
-function binl2b64(binarray)
-{
-  var tab = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-  var str = "";
-  for(var i = 0; i < binarray.length * 4; i += 3)
-  {
-    var triplet = (((binarray[i   >> 2] >> 8 * ( i   %4)) & 0xFF) << 16)
-                | (((binarray[i+1 >> 2] >> 8 * ((i+1)%4)) & 0xFF) << 8 )
-                |  ((binarray[i+2 >> 2] >> 8 * ((i+2)%4)) & 0xFF);
-    for(var j = 0; j < 4; j++)
-    {
-      if(i * 8 + j * 6 > binarray.length * 32) str += b64pad;
-      else str += tab.charAt((triplet >> 6*(3-j)) & 0x3F);
-    }
-  }
-  return str;
-}
-
-function md5_cmn(q, a, b, x, s, t)
-{
-  return safe_add(bit_rol(safe_add(safe_add(a, q), safe_add(x, t)), s),b);
-}
-function md5_ff(a, b, c, d, x, s, t)
-{
-  return md5_cmn((b & c) | ((~b) & d), a, b, x, s, t);
-}
-function md5_gg(a, b, c, d, x, s, t)
-{
-  return md5_cmn((b & d) | (c & (~d)), a, b, x, s, t);
-}
-function md5_hh(a, b, c, d, x, s, t)
-{
-  return md5_cmn(b ^ c ^ d, a, b, x, s, t);
-}
-function md5_ii(a, b, c, d, x, s, t)
-{
-  return md5_cmn(c ^ (b | (~d)), a, b, x, s, t);
-}
-
-function safe_add(x, y)
-{
-  var lsw = (x & 0xFFFF) + (y & 0xFFFF);
-  var msw = (x >> 16) + (y >> 16) + (lsw >> 16);
-  return (msw << 16) | (lsw & 0xFFFF);
-}
-
-function bit_rol(num, cnt)
-{
-  return (num << cnt) | (num >>> (32 - cnt));
-}
-/*-------------------------------------- md5 calculate function end --------------------------------------*/
-
-var url = 'http://blog.loli.io/2019/06/10/日麻折腾笔记-01-和牌的判断/'
-var gitalk = new Gitalk({
-  id: b64_md5(url), 
-  clientID: '957284a372440bcf40f7',
-  clientSecret: '23e1eda7961136ed50b511624ab7f448fe635e7d',
-  repo: 'chocotan.github.io',
-  owner: 'chocotan',
-  admin: 'chocotan',
-  distractionFreeMode: true  
-})
-
-gitalk.render('gitalk-container')
-</script>
 
   
 
@@ -493,8 +368,7 @@ gitalk.render('gitalk-container')
   
 
   
-
-  
+<!-- City版安装代码已完成 -->
 
 
           </div>
