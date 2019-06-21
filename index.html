@@ -182,7 +182,7 @@
 <p>可以和牌</p>
 <p>也可以分解为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">11 123 345 567 8 999</span><br></pre></td></tr></table></figure></p>
 <p>无法和牌</p>
-<p>可以看到关键在于怎么对手牌中的顺子和刻子分组</p>
+<p>可以看到关键在于怎么对手牌中的顺子和刻子分组<br><!--readmore--></p>
 <h2 id="从雀头入手"><a href="#从雀头入手" class="headerlink" title="从雀头入手"></a>从雀头入手</h2><p>不管怎么分组，手牌都要有一个<code>雀头</code>，所以我们先确定雀头</p>
 <p>手牌中，数量大于等于2的牌都能作为雀头</p>
 <p>当确定好雀头之后，就要将剩余的手牌分解为 顺子+刻子的情况，在上面的示例中，当选取5s作为雀头后，剩余的牌为 111234678999 ，我可以将 11123 认为是 111+23的形式，也可以是 11+123的形式，用程序也是比较方便实现的。</p>
