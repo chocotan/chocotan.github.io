@@ -155,6 +155,91 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-日麻折腾笔记-03-牌效率" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/06/23/日麻折腾笔记-03-牌效率/">日麻折腾笔记-03-牌效率</a>
+    </h1>
+  
+
+        
+        <a href="/2019/06/23/日麻折腾笔记-03-牌效率/" class="archive-article-date">
+  	<time datetime="2019-06-23T14:38:35.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-06-23</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h2><h3 id="牌效率是什么"><a href="#牌效率是什么" class="headerlink" title="牌效率是什么"></a>牌效率是什么</h3><blockquote>
+<p>经营自己的手牌，以达成和牌为目标<br>我们的任何操作（切牌、碰、吃等）都是为了最终能够和牌服务的，也就是提高和了率。</p>
+</blockquote>
+<p>在只考虑自摸的情况下，我们可以快速的计算出打哪张牌能够使向听数前进、有效牌和改良牌变多。</p>
+<h3 id="有效牌"><a href="#有效牌" class="headerlink" title="有效牌"></a>有效牌</h3><blockquote>
+<p>能够减少向听数的牌</p>
+</blockquote>
+<p>通过向听数的计算公式<code>8-2*(面子数)-对子数-搭子数</code>，我们发现，能够减少向听数的牌有以下几<br>种：</p>
+<ol>
+<li>能够与搭子组成一个顺子，此时面子数量+1，搭子数量-1，向听数+1</li>
+<li>能够与对子组成一个刻子，此时面子数量+1，对子数量-1，向听数+1</li>
+<li>能够与孤张组成一个对子，此时对子数量+1，向听数+1</li>
+<li>能够与孤张组成一个搭子，此时搭子数量+1，向听数+1</li>
+</ol>
+<p>这样一来就很清晰了，接下来我们来编码，计算以下两种情况</p>
+<ol>
+<li>在向听数减少的情况下，打出哪张牌后的有效牌最多</li>
+<li>在打出任何牌都不能导致向听数减少的情况下，打出哪张牌后的有效牌最多（也就是指改良）</li>
+</ol>
+        
+          <a class="article-more-a" href="/2019/06/23/日麻折腾笔记-03-牌效率/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/06/23/日麻折腾笔记-03-牌效率/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+
+
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-日麻折腾笔记-02-向听数的判断" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
